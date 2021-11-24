@@ -1,3 +1,4 @@
+set noswapfile
 set ttyfast
 " Enable mouse use in all modes
 set mouse=a
