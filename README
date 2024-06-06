@@ -1,0 +1,12 @@
+*Requirements*
+
+* fzf
+* ripgrep
+* tmux plugin manager (git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm)
+
+*Installation*
+
+ln -s ~/dotfiles/.tmux.conf .tmux.conf
+ln -s ~/dotfiles/config .config
+
+In tmux, hit ctrl+space+I to install plugins.

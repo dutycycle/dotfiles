@@ -15,7 +15,7 @@ vim.o.swapfile = false
 vim.opt.wrap = true
 vim.opt.linebreak = true
 vim.opt.termguicolors = true
-vim.opt.background = "light"
+vim.opt.background = "dark"
 
 vim.api.nvim_set_keymap('', '<Space>', '<Nop>', {})
 vim.g.mapleader = ' '  -- set leader to space
