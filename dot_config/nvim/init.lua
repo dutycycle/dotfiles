@@ -225,6 +225,151 @@ require("lazy").setup({
     dependencies = { "mason-org/mason.nvim" },
   },
   {
+    "mhartington/formatter.nvim",
+    config = function()
+      local formatter = require("formatter")
+      local util = require("formatter.util")
+
+      formatter.setup({
+        logging = true,
+        log_level = vim.log.levels.WARN,
+        filetype = {
+          python = {
+            function()
+              return {
+                exe = "ruff",
+                args = {
+                  "format",
+                  "--stdin-filename",
+                  util.escape_path(util.get_current_buffer_file_path()),
+                  "-",
+                },
+                stdin = true,
+              }
+            end,
+            function()
+              return {
+                exe = "ruff",
+                args = {
+                  "check",
+                  "--fix",
+                  "--unsafe-fixes",
+                  "--stdin-filename",
+                  util.escape_path(util.get_current_buffer_file_path()),
+                  "-",
+                },
+                stdin = true,
+              }
+            end,
+          },
+          c = {
+            function()
+              return {
+                exe = "clang-format",
+                args = {
+                  "--assume-filename",
+                  util.escape_path(util.get_current_buffer_file_path()),
+                },
+                stdin = true,
+              }
+            end,
+          },
+          cpp = {
+            function()
+              return {
+                exe = "clang-format",
+                args = {
+                  "--assume-filename",
+                  util.escape_path(util.get_current_buffer_file_path()),
+                },
+                stdin = true,
+              }
+            end,
+          },
+          lua = {
+            function()
+              return {
+                exe = "stylua",
+                args = {
+                  "--search-parent-directories",
+                  "--stdin-filepath",
+                  util.escape_path(util.get_current_buffer_file_path()),
+                  "--",
+                  "-",
+                },
+                stdin = true,
+              }
+            end,
+          },
+          go = {
+            function()
+              return {
+                exe = "gofmt",
+                args = {},
+                stdin = true,
+              }
+            end,
+          },
+        },
+      })
+
+      -- Autoformat on save
+      local format_augroup = vim.api.nvim_create_augroup("FormatAutogroup", { clear = true })
+      vim.api.nvim_create_autocmd("BufWritePost", {
+        group = format_augroup,
+        pattern = { "*.py", "*.c", "*.cpp", "*.h", "*.hpp", "*.lua", "*.go" },
+        command = "FormatWrite",
+      })
+
+      -- Manual format keymap
+      vim.keymap.set("n", "<leader>l", "<cmd>Format<cr>", { desc = "Format buffer" })
+    end,
+  },
+  -- Markdown rendering plugin
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
+    ft = { "markdown" },
+    config = function()
+      require("render-markdown").setup({
+        -- Disable rendering in insert mode, enable in normal mode
+        render_modes = { "n", "c", "i" },
+        -- Optional: customize appearance
+        heading = {
+          -- Add icons to headings
+          enabled = true,
+          sign = true,
+          icons = { "󰲡 ", "󰲣 ", "󰲥 ", "󰲧 ", "󰲩 ", "󰲫 " },
+        },
+        code = {
+          -- Style for code blocks
+          enabled = true,
+          sign = true,
+          style = "full",
+          border = "thin",
+        },
+        bullet = {
+          -- Custom bullet points
+          enabled = true,
+          icons = { "●", "○", "◆", "◇" },
+        },
+      })
+    end,
+  },
+  -- Treesitter for syntax highlighting
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    config = function()
+      require("nvim-treesitter.configs").setup({
+        ensure_installed = { "markdown", "markdown_inline" },
+        highlight = {
+          enable = true,
+        },
+      })
+    end,
+  },
+  {
     "neovim/nvim-lspconfig",
     dependencies = {
       "mason-org/mason.nvim",
