@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sed:*)",
+      "Read(//Users/kai/.local/share/uv/tools/basedpyright/bin/**)",
+      "Bash(test:*)",
+      "Read(//Users/kai/.local/state/nvim/**)",
+      "Bash(nvim:*)",
+      "WebFetch(domain:neovim.io)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
