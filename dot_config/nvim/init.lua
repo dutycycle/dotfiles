@@ -390,19 +390,44 @@ require("lazy").setup({
       })
     end,
   },
+  -- Blink.cmp - completion plugin
+  {
+    "saghen/blink.cmp",
+    lazy = false,
+    dependencies = "rafamadriz/friendly-snippets",
+    version = "v0.*",
+    opts = {
+      keymap = {
+        preset = "default",
+        ["<C-space>"] = false,
+        ["<CR>"] = false,
+        ["<C-y>"] = { "accept", "fallback" },
+      },
+      appearance = {
+        use_nvim_cmp_as_default = true,
+        nerd_font_variant = "mono",
+      },
+      sources = {
+        default = { "lsp", "path", "snippets", "buffer" },
+      },
+      signature = { enabled = true },
+    },
+    opts_extend = { "sources.default" },
+  },
   {
     "neovim/nvim-lspconfig",
     dependencies = {
       "mason-org/mason.nvim",
       "mason-org/mason-lspconfig.nvim",
+      "saghen/blink.cmp",
     },
     config = function()
       local mason_lspconfig = require("mason-lspconfig")
 
       local capabilities = vim.lsp.protocol.make_client_capabilities()
-      local has_cmp, cmp_lsp = pcall(require, "cmp_nvim_lsp")
-      if has_cmp then
-        capabilities = cmp_lsp.default_capabilities(capabilities)
+      local has_blink, blink = pcall(require, "blink.cmp")
+      if has_blink then
+        capabilities = blink.get_lsp_capabilities(capabilities)
       end
 
       local util = require("lspconfig.util")
