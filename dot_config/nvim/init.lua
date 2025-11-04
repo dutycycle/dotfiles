@@ -1,9 +1,30 @@
 vim.g.mapleader = " "
 vim.o.autoread = true
+vim.opt.updatetime = 200
 vim.opt.iskeyword:remove("_")
-vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter" }, {
-  command = "if mode() != 'c' | checktime | endif",
+
+local autoread_group = vim.api.nvim_create_augroup("kai_autoread", { clear = true })
+
+vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGained", "TermClose", "TermLeave" }, {
+  group = autoread_group,
   pattern = "*",
+  callback = function()
+    if vim.api.nvim_get_mode().mode:sub(1, 1) ~= "c" then
+      vim.cmd.checktime()
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileChangedShellPost", {
+  group = autoread_group,
+  pattern = "*",
+  callback = function(event)
+    local file = event.file or event.match or ""
+    if file == "" then
+      return
+    end
+    vim.notify("File reloaded from disk: " .. file, vim.log.levels.WARN)
+  end,
 })
 
 
