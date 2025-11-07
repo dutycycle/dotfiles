@@ -1,4 +1,4 @@
 command = /opt/homebrew/bin/fish 
-theme = Rose Pine
-background-image = /Users/kai/background.png
-background-image-opacity = .1
+theme = Rose Pine Dawn
+#background-image = /Users/kai/background.png
+#background-image-opacity = .1

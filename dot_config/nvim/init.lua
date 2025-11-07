@@ -53,7 +53,7 @@ require("lazy").setup({
           transparency = true,
         },
       })
-      vim.cmd.colorscheme("rose-pine")
+      vim.cmd.colorscheme("rose-pine-dawn")
     end,
   },
   -- Tmux navigation plugin
@@ -117,6 +117,8 @@ require("lazy").setup({
 
       -- Load fzf extension if built
       pcall(telescope.load_extension, "fzf")
+      -- Load ast_grep extension if available
+      pcall(telescope.load_extension, "ast_grep")
 
       -- Keymaps
       vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "[F]ind [F]iles" })
@@ -124,7 +126,13 @@ require("lazy").setup({
       vim.keymap.set("n", "<leader>fd", function()
         builtin.diagnostics({ bufnr = 0 })
       end, { desc = "[F]ind buffer [D]iagnostics" })
+      vim.keymap.set("n", "<leader>fs", "<cmd>Telescope ast_grep<CR>", { desc = "[F]ind by [S]tructural grep" })
     end,
+  },
+  -- Telescope ast-grep extension for structural search
+  {
+    "Marskey/telescope-sg",
+    dependencies = { "nvim-telescope/telescope.nvim" },
   },
   -- File explorer
   {
@@ -399,9 +407,10 @@ require("lazy").setup({
     opts = {
       keymap = {
         preset = "default",
-        ["<C-space>"] = false,
-        ["<CR>"] = false,
         ["<C-y>"] = { "accept", "fallback" },
+	["<TAB>"] = { "accept", "fallback" },
+        ["<C-space>"] = {},
+        ["<CR>"] = {},
       },
       appearance = {
         use_nvim_cmp_as_default = true,
@@ -450,6 +459,7 @@ require("lazy").setup({
           map("n", "<leader>rn", vim.lsp.buf.rename, "Rename Symbol")
           map("n", "<leader>ca", vim.lsp.buf.code_action, "Code Action")
           map("n", "gr", vim.lsp.buf.references, "Goto References")
+          map("n", "<leader>e", vim.diagnostic.open_float, "Show diagnostic")
         end,
       })
 
